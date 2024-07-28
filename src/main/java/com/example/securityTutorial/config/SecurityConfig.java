@@ -59,10 +59,15 @@ public class SecurityConfig {
     }
     */
     
-    @Bean
+    
+    /*@Bean
     public UserDetailsService userDetailsService(DataSource datasource){
         return new JdbcUserDetailsManager(datasource);
     }
+    */
+    
+    
+    
     
     @Bean
     public PasswordEncoder endcoder(){
