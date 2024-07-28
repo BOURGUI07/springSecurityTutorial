@@ -37,10 +37,13 @@ public class SecurityConfig {
         // http.authorizeHttpRequests(requests -> requests.anyRequest().denyAll());
         http.authorizeHttpRequests(requests -> requests
                 .requestMatchers("/myAccount", "/myBalance","/myLoans", "/myCards").authenticated()
-                .requestMatchers("/notices", "/contact","/error").permitAll()
+                .requestMatchers("/notices", "/contact","/error", "/register").permitAll()
         );
         http.formLogin(withDefaults());
         http.httpBasic(withDefaults());
+        
+        // without disabling csrf protection, we aren't gonna be allowed to register users
+        http.csrf(x -> x.disable());
         return http.build();
     }
     
