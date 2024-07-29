@@ -22,8 +22,8 @@ import org.springframework.security.web.authentication.password.HaveIBeenPwnedRe
  */
 @EnableWebSecurity
 @Configuration
-@Profile("!prod")
-public class SecurityConfig {
+@Profile("prod")
+public class ProdSecurityConfig {
     
     
     
