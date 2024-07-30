@@ -4,6 +4,8 @@
  */
 package com.example.securityTutorial.config;
 
+import com.example.securityTutorial.handlingexceptions.CustomAccessDeniedHandler;
+import com.example.securityTutorial.handlingexceptions.CustomBasicAuthEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -28,15 +30,36 @@ public class ProdSecurityConfig {
     
     
     @Bean
-    public SecurityFilterChain filterCahin(HttpSecurity http) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+        // handle Invalid Sessions
+        // Redirect User to another page ("/invalidSession)
+        // Restrict User to Have ONLY ONE Session!
+        http.sessionManagement(s->s.invalidSessionUrl("/invalidSession").maximumSessions(1).maxSessionsPreventsLogin(true));
+        
+        // Accepting Only HTTPS protocol requests
+        http.requiresChannel(x -> x.anyRequest().requiresSecure());
+        
+        
         // http.authorizeHttpRequests(requests -> requests.anyRequest().permitAll());
         // http.authorizeHttpRequests(requests -> requests.anyRequest().denyAll());
         http.authorizeHttpRequests(requests -> requests
                 .requestMatchers("/myAccount", "/myBalance","/myLoans", "/myCards").authenticated()
-                .requestMatchers("/notices", "/contact","/error", "/register").permitAll()
+                .requestMatchers("/notices", "/contact","/error", "/register","/invalidSession").permitAll()
         );
         http.formLogin(withDefaults());
-        http.httpBasic(withDefaults());
+        
+        
+        // if we don't need any customization : http.httpBasic(withDefaults());
+        http.httpBasic(x -> x.authenticationEntryPoint(new CustomBasicAuthEntryPoint()));
+        
+        // Setting custom AuthenticationEntryPoint for handling authentication exceptions : 
+        // http.exceptionHandling(x -> x.authenticationEntryPoint(new CustomBasicAuthEntryPoint()));
+        
+         // the denied user gonna be directed to ("/denied")
+         // http.exceptionHandling(x -> x.accessDeniedHandler(new CustomAccessDeniedHandler()).accessDeniedPage("/denied"));
+         
+         http.exceptionHandling(x -> x.accessDeniedHandler(new CustomAccessDeniedHandler()));
+        
         
         // without disabling csrf protection, we aren't gonna be allowed to register users
         http.csrf(x -> x.disable());

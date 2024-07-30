@@ -30,7 +30,7 @@ public class CustomerProdUsernamePwdAuthProvider implements AuthenticationProvid
         var password = authentication.getCredentials().toString();
         var user = service.loadUserByUsername(username);
         
-        // we well accept any password if the active profile is prod
+        // we will accept any password if the active profile is prod
         return new UsernamePasswordAuthenticationToken(username,password,user.getAuthorities());
     }
 

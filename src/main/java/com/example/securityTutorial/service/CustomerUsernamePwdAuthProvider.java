@@ -32,6 +32,8 @@ public class CustomerUsernamePwdAuthProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         var username = authentication.getName();
         var password = authentication.getCredentials().toString();
+        
+        
         var user = service.loadUserByUsername(username);
         if(encoder.matches(password, user.getPassword())){
             return new UsernamePasswordAuthenticationToken(username,password,user.getAuthorities());
