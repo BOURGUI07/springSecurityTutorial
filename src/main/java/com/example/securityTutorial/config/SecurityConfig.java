@@ -48,7 +48,11 @@ public class SecurityConfig {
 
                 Example: If a user is allowed only one session (maximumSessions(1)), and they try to log in from a different device or browser while already logged in, the second login attempt will fail. The user will not be able to have multiple sessions concurrently because maxSessionsPreventsLogin(true) prevents them from logging in again while their previous session is active.
         */
-        http.sessionManagement(s->s.invalidSessionUrl("/invalidSession").maximumSessions(3).maxSessionsPreventsLogin(true).expiredUrl("/expiredSession"));
+        http.sessionManagement(s->s
+                .invalidSessionUrl("/invalidSession")
+                .maximumSessions(3)
+                .maxSessionsPreventsLogin(true)
+                .expiredUrl("/expiredSession"));
         
        
         
